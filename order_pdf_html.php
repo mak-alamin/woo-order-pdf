@@ -6,6 +6,8 @@
     <?php
     foreach ($order->get_items() as $item_id => $item) {
         $meta_data = $item->get_all_formatted_meta_data('');
+
+        $all_metadata = $item->get_meta_data();
     ?>
         <table class="order-item">
             <tr class="item-heading">
@@ -32,6 +34,15 @@
                             <?php } ?>
                         </table>
                     <?php } ?>
+
+
+                    <?php
+                    // Composite Product meta data
+                    // $wooco_items = WPCleverWooco::get_items($item->get_meta('wooco_ids'));
+
+                    woo_op_order_composite_meta($item_id, $item);
+
+                    ?>
                 </td>
 
                 <td class="item-cost" width="15%">
