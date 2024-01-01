@@ -2,7 +2,7 @@
 /*
 Plugin Name: Woo Order PDF
 Description: Adds a Generate PDF button in WooCommerce order details page in the admin.
-Version: 1.0
+Version: 1.0.1
 Author: Mak Alamin
 */
 
@@ -95,7 +95,7 @@ function woo_op_order_composite_meta($order_item_id, $order_item)
 
                 foreach ($items as $item) {
                     $component_name = isset($components[$item['key']]) ? $components[$item['key']]['name'] : '';
-                    
+
                     if ((WPCleverWooco::get_setting('hide_component_name', 'yes') === 'no') && !empty($item['component'])) {
 
                         $items_str[] = '<strong>' . $component_name . ': </strong>' . $item['qty'] . ' × ' . get_the_title($item['id']);
