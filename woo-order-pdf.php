@@ -18,6 +18,17 @@ function enqueue_pdf_button_scripts($hook)
 {
 ?>
     <style>
+        a.button.wc-action-button.wc-action-button-print_pdf.print_pdf {
+            width: 80px;
+        }
+
+        a.button.wc-action-button.wc-action-button-print_pdf.print_pdf:after {
+            content: "Print PDF";
+            color: #333;
+            width: 80px;
+            width: 100%;
+        }
+
         #woo_order_pdf_frame {
             width: 100%;
             height: 1px;
@@ -57,48 +68,58 @@ function woo_op_order_print_metabox_content($post)
     echo '<script src="' . WOO_ORDER_PDF_JS . '"></script>';
 }
 
-function woo_op_order_composite_meta( $order_item_id, $order_item ) {
-    if ( ( $ids = $order_item->get_meta( 'wooco_ids' ) ) && ( is_admin() || ( WPCleverWooco::get_setting( 'hide_component', 'no' ) === 'yes_text' ) || ( WPCleverWooco::get_setting( 'hide_component', 'no' ) === 'yes_list' ) ) ) {
-        if ( $items = WPCleverWooco::get_items( $ids ) ) {
-            if ( WPCleverWooco::get_setting( 'hide_component', 'no' ) === 'yes_list' ) {
+function woo_op_order_composite_meta($order_item_id, $order_item)
+{
+    if (($ids = $order_item->get_meta('wooco_ids')) && (is_admin() || (WPCleverWooco::get_setting('hide_component', 'no') === 'yes_text') || (WPCleverWooco::get_setting('hide_component', 'no') === 'yes_list'))) {
+
+        if ($items = WPCleverWooco::get_items($ids)) {
+
+            $product_id = $order_item->get_product_id();
+
+            $components    = get_post_meta($product_id, 'wooco_components', true);
+
+            if (WPCleverWooco::get_setting('hide_component', 'no') === 'yes_list') {
                 $items_str = [];
 
-                foreach ( $items as $item ) {
-                    if ( ( WPCleverWooco::get_setting( 'hide_component_name', 'yes' ) === 'no' ) && ! empty( $item['component'] ) ) {
-                        $items_str[] = apply_filters( 'wooco_order_component_product_name', '<li>' . $item['component'] . ': ' . $item['qty'] . ' × ' . get_the_title( $item['id'] ) . '</li>', $item );
+                foreach ($items as $item) {
+                    if ((WPCleverWooco::get_setting('hide_component_name', 'yes') === 'no') && !empty($item['component'])) {
+                        $items_str[] = apply_filters('wooco_order_component_product_name', '<li>' . $item['component'] . ': ' . $item['qty'] . ' × ' . get_the_title($item['id']) . '</li>', $item);
                     } else {
-                        $items_str[] = apply_filters( 'wooco_order_component_product_name', '<li>' . $item['qty'] . ' × ' . get_the_title( $item['id'] ) . '</li>', $item );
+                        $items_str[] = apply_filters('wooco_order_component_product_name', '<li>' . $item['qty'] . ' × ' . get_the_title($item['id']) . '</li>', $item);
                     }
                 }
 
-                $items_str = apply_filters( 'wooco_order_component_product_names', '<ul>' . implode( '', $items_str ) . '</ul>', $items );
+                $items_str = apply_filters('wooco_order_component_product_names', '<ul>' . implode('', $items_str) . '</ul>', $items);
             } else {
                 $items_str = [];
 
-                foreach ( $items as $item ) {
-                    if ( ( WPCleverWooco::get_setting( 'hide_component_name', 'yes' ) === 'no' ) && ! empty( $item['component'] ) ) {
-                        $items_str[] = apply_filters( 'wooco_order_component_product_name', $item['component'] . ': ' . $item['qty'] . ' × ' . get_the_title( $item['id'] ), $item );
+                foreach ($items as $item) {
+                    $component_name = isset($components[$item['key']]) ? $components[$item['key']]['name'] : '';
+                    
+                    if ((WPCleverWooco::get_setting('hide_component_name', 'yes') === 'no') && !empty($item['component'])) {
+
+                        $items_str[] = '<strong>' . $component_name . ': </strong>' . $item['qty'] . ' × ' . get_the_title($item['id']);
                     } else {
-                        $items_str[] = apply_filters( 'wooco_order_component_product_name', $item['qty'] . ' × ' . get_the_title( $item['id'] ), $item );
+
+                        $items_str[] = '<strong>' . $component_name . ': </strong>' . apply_filters('wooco_order_component_product_name', $item['qty'] . ' × ' . get_the_title($item['id']), $item);
                     }
                 }
 
-                $items_str = apply_filters( 'wooco_order_component_product_names', implode( '; ', $items_str ), $items );
+                $items_str =  implode('<br/> ', $items_str);
             }
 
-            echo apply_filters( 'wooco_before_order_itemmeta_composite', '<div class="wooco-itemmeta-composite">' . sprintf( WPCleverWooco::localization( 'cart_components_s', esc_html__( 'Components: %s', 'wpc-composite-products' ) ), $items_str ) . '</div>', $order_item_id, $order_item );
+            echo apply_filters('wooco_before_order_itemmeta_composite', '<div class="wooco-itemmeta-composite">' . sprintf(WPCleverWooco::localization('cart_components_s', esc_html__('Components: %s', 'wpc-composite-products')), $items_str) . '</div>', $order_item_id, $order_item);
         }
     }
 
-    if ( is_admin() && ( $parent_id = $order_item->get_meta( 'wooco_parent_id' ) ) ) {
-        if ( ( $component = $order_item->get_meta( 'wooco_component' ) ) && ! empty( $component ) ) {
-            echo apply_filters( 'wooco_before_order_itemmeta_component', '<div class="wooco-itemmeta-component">' . sprintf( WPCleverWooco::localization( 'cart_composite_s', esc_html__( 'Composite: %s', 'wpc-composite-products' ) ), get_the_title( $parent_id ) . apply_filters( 'wooco_name_separator', ' &rarr; ' ) . $component ) . '</div>', $order_item_id, $order_item );
+    if (is_admin() && ($parent_id = $order_item->get_meta('wooco_parent_id'))) {
+        if (($component = $order_item->get_meta('wooco_component')) && !empty($component)) {
+            echo apply_filters('wooco_before_order_itemmeta_component', '<div class="wooco-itemmeta-component">' . sprintf(WPCleverWooco::localization('cart_composite_s', esc_html__('Composite: %s', 'wpc-composite-products')), get_the_title($parent_id) . apply_filters('wooco_name_separator', ' &rarr; ') . $component) . '</div>', $order_item_id, $order_item);
         } else {
-            echo apply_filters( 'wooco_before_order_itemmeta_component', '<div class="wooco-itemmeta-component">' . sprintf( WPCleverWooco::localization( 'cart_composite_s', esc_html__( 'Composite: %s', 'wpc-composite-products' ) ), get_the_title( $parent_id ) ) . '</div>', $order_item_id, $order_item );
+            echo apply_filters('wooco_before_order_itemmeta_component', '<div class="wooco-itemmeta-component">' . sprintf(WPCleverWooco::localization('cart_composite_s', esc_html__('Composite: %s', 'wpc-composite-products')), get_the_title($parent_id)) . '</div>', $order_item_id, $order_item);
         }
     }
 }
-
 
 function woo_op_order_items_metabox_content($post)
 {
@@ -113,4 +134,18 @@ function woo_op_order_items_metabox_content($post)
     } else {
         echo 'Order not found.';
     }
+}
+
+// Add Print PDF button to Orders action column
+// add_filter('woocommerce_admin_order_actions', 'woo_op_add_print_pdf_action_button', 100, 2);
+function woo_op_add_print_pdf_action_button($actions, $order)
+{
+    // Set the action button
+    $actions['print_pdf'] = array(
+        'url'       =>  admin_url('admin-ajax.php?action=woo_op_print_pdf&order_id=' . $order->get_id()),
+        'name'      => __('Print PDF', 'woocommerce'),
+        'action'    => 'print_pdf',
+    );
+
+    return $actions;
 }
