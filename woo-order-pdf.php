@@ -2,15 +2,13 @@
 /*
 Plugin Name: Woo Order PDF
 Description: Adds a Generate PDF button in WooCommerce order details page in the admin.
-Version: 1.0.3
+Version: 1.0.4
 Author: Mak Alamin
 */
 
 if (!defined("ABSPATH")) {
     wp_die("Access denied!");
 }
-
-define("WOO_ORDER_PDF_JS", plugin_dir_url(__FILE__) . 'js/pdf-button-script.js');
 
 // Enqueue necessary scripts and styles in admin
 add_action('admin_enqueue_scripts', 'enqueue_pdf_button_scripts');
@@ -34,8 +32,26 @@ function enqueue_pdf_button_scripts($hook)
             height: 1px;
             visibility: hidden;
         }
+
+        div#order_items_print_pdf {
+            height: 1px;
+            overflow: hidden;
+        }
+
+        div#order_items_metabox {
+            height: 1px;
+            overflow: hidden;
+            border: 0;
+            background: transparent;
+        }
     </style>
-<?php
+    <?php
+
+    wp_enqueue_script('woo_op_js', plugin_dir_url(__FILE__) . 'js/pdf-button-script.js', array('jquery'), time(), true);
+
+    wp_localize_script('woo_op_js', 'wooOrderPdfData', array(
+        'ajaxurl' => admin_url('admin-ajax.php')
+    ));
 }
 
 // Add custom metabox to display order items on WooCommerce orders page
@@ -64,8 +80,6 @@ function woo_op_add_order_items_metabox()
 function woo_op_order_print_metabox_content($post)
 {
     echo '<p><button type="button" id="generate-pdf-button" class="button generate-pdf-button" data-order_id="' . $post->ID . '">Print PDF</button></p>';
-
-    echo '<script src="' . WOO_ORDER_PDF_JS . '"></script>';
 }
 
 function woo_op_order_composite_meta($order_item_id, $order_item)
@@ -123,29 +137,61 @@ function woo_op_order_composite_meta($order_item_id, $order_item)
 
 function woo_op_order_items_metabox_content($post)
 {
-    // Get the order object
-    $order = wc_get_order($post->ID);
-
     // Display order items
-    if ($order) {
-        require __DIR__ . '/order_pdf_html.php';
+    echo woo_op_generate_order_items_for_pdf($post->ID);
+}
 
+function woo_op_generate_order_items_for_pdf($order_id)
+{
+    $order = wc_get_order(intval($order_id));
+
+    ob_start();
+
+    if (!empty($order)) {
+        require_once __DIR__ . '/order_pdf_html.php';
         echo '<iframe id="woo_order_pdf_frame"> </iframe>';
     } else {
         echo 'Order not found.';
     }
+
+    return ob_get_clean();
 }
 
 // Add Print PDF button to Orders action column
-// add_filter('woocommerce_admin_order_actions', 'woo_op_add_print_pdf_action_button', 100, 2);
+add_filter('woocommerce_admin_order_actions', 'woo_op_add_print_pdf_action_button', 100, 2);
 function woo_op_add_print_pdf_action_button($actions, $order)
 {
     // Set the action button
     $actions['print_pdf'] = array(
-        'url'       =>  admin_url('admin-ajax.php?action=woo_op_print_pdf&order_id=' . $order->get_id()),
+        'url'       =>  admin_url('admin-ajax.php?order_id=' . $order->get_id()),
         'name'      => __('Print PDF', 'woocommerce'),
         'action'    => 'print_pdf',
     );
 
     return $actions;
+}
+
+// Add Iframe in WooCommerce orders page
+add_action('admin_footer', 'woo_op_add_iframe_to_order_table');
+function woo_op_add_iframe_to_order_table()
+{
+    global $pagenow;
+
+    // Check if it's the WooCommerce orders page
+    if ($pagenow === 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] === 'shop_order') {
+    ?>
+        <div id="order_items_print_pdf"></div>
+<?php
+    }
+}
+
+add_action('wp_ajax_woo_op_get_print_html_for_action_print', 'woo_op_get_print_html_for_action_print');
+
+function woo_op_get_print_html_for_action_print()
+{
+    $order_id = isset($_REQUEST['order_id']) ? $_REQUEST['order_id'] : 0;
+
+    $html = woo_op_generate_order_items_for_pdf($order_id);
+
+    wp_send_json($html);
 }
