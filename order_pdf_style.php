@@ -3,7 +3,6 @@
     #woo_order_items_html .pdf_heading,
     .pdf_heading {
         padding: 0;
-        padding-top: 50px;
         font-size: 22px;
         font-weight: 600;
         text-align: center;
@@ -11,7 +10,8 @@
 
     #woo_order_items_html .order-item,
     .order-item {
-        padding: 20px;
+        padding: 0px;
+        padding-top: 50px;
     }
 
     #woo_order_items_html .order-item table,
@@ -66,7 +66,7 @@
         }
 
         body {
-            margin: 1.6cm;
+            margin: 0 1.6cm 1.6cm 1.6cm;
         }
     }
 </style>
