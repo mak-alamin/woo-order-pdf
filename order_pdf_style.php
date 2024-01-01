@@ -3,6 +3,7 @@
     #woo_order_items_html .pdf_heading,
     .pdf_heading {
         padding: 0;
+        padding-top: 50px;
         font-size: 22px;
         font-weight: 600;
         text-align: center;

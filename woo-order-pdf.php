@@ -2,7 +2,7 @@
 /*
 Plugin Name: Woo Order PDF
 Description: Adds a Generate PDF button in WooCommerce order details page in the admin.
-Version: 1.0.1
+Version: 1.0.2
 Author: Mak Alamin
 */
 
