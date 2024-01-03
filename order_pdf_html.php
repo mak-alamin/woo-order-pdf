@@ -3,6 +3,10 @@
 
     require_once __DIR__ . '/order_pdf_style.php';
 
+    $items_count = count($order->get_items());
+
+    $counter = 1;
+
     foreach ($order->get_items() as $item_id => $item) {
         $meta_data = $item->get_all_formatted_meta_data('');
 
@@ -85,6 +89,11 @@
             </table>
         </div>
     <?php
+        if ($counter < $items_count) {
+            echo '<div class="print-page-break"></div>';
+        }
+
+        $counter++;
     }
     ?>
 </div>

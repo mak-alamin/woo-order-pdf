@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Woo Order PDF
-Description: Adds a Generate PDF button in WooCommerce order details page in the admin.
-Version: 1.0.4
+Description: Adds a Generate PDF button to print orders in the WooCommerce admin.
+Version: 1.0.5
 Author: Mak Alamin
 */
 
@@ -14,38 +14,7 @@ if (!defined("ABSPATH")) {
 add_action('admin_enqueue_scripts', 'enqueue_pdf_button_scripts');
 function enqueue_pdf_button_scripts($hook)
 {
-?>
-    <style>
-        a.button.wc-action-button.wc-action-button-print_pdf.print_pdf {
-            width: 80px;
-        }
-
-        a.button.wc-action-button.wc-action-button-print_pdf.print_pdf:after {
-            content: "Print PDF";
-            color: #333;
-            width: 80px;
-            width: 100%;
-        }
-
-        #woo_order_pdf_frame {
-            width: 100%;
-            height: 1px;
-            visibility: hidden;
-        }
-
-        div#order_items_print_pdf {
-            height: 1px;
-            overflow: hidden;
-        }
-
-        div#order_items_metabox {
-            height: 1px;
-            overflow: hidden;
-            border: 0;
-            background: transparent;
-        }
-    </style>
-    <?php
+    wp_enqueue_style('woo_op_admin_main', plugins_url('css/admin-main.css',  __FILE__) , null, time(), false);
 
     wp_enqueue_script('woo_op_js', plugin_dir_url(__FILE__) . 'js/pdf-button-script.js', array('jquery'), time(), true);
 

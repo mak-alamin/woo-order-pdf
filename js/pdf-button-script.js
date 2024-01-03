@@ -12,8 +12,10 @@ function printDiv(divId, orderId = 0) {
 
   var wspFrame = document.getElementById("woo_order_pdf_frame").contentWindow;
 
+  console.log(wspFrame);
   wspFrame.focus();
   wspFrame.print();
+
   //   window.print();
 
   document.title = originalTitle;
@@ -56,7 +58,9 @@ jQuery(document).on(
         if (res) {
           jQuery("#order_items_print_pdf").html(res);
 
-          printDiv("woo_order_items_html", order_id);
+          setTimeout(function(){
+            printDiv("woo_order_items_html", order_id);
+          }, 100);
         }
       },
       error: function (err) {

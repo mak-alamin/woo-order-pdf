@@ -56,10 +56,9 @@
     }
 
     @media print {
-        .order-item {
-            page-break-before: always;
+        .print-page-break{
+            page-break-before:always;
         }
-
         @page {
             size: auto;
             margin: 0mm;

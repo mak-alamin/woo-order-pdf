@@ -1,0 +1,28 @@
+a.button.wc-action-button.wc-action-button-print_pdf.print_pdf {
+    width: 80px;
+}
+
+a.button.wc-action-button.wc-action-button-print_pdf.print_pdf:after {
+    content: "Print PDF";
+    color: #333;
+    width: 80px;
+    width: 100%;
+}
+
+#woo_order_pdf_frame {
+    width: 100%;
+    height: 1px;
+    visibility: hidden;
+}
+
+div#order_items_print_pdf {
+    height: 1px;
+    overflow: hidden;
+}
+
+div#order_items_metabox {
+    height: 1px;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+}
