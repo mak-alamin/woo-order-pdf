@@ -1,0 +1,31 @@
+a.button.wc-action-button.wc-action-button-print_pdf.print_pdf:after {
+    content: "\f193" !important;
+    color: #2271b1;
+    font-family: dashicons !important;
+}
+a.button.wc-action-button.wc-action-button-print_pdf.print_pdf .fa-print:before {
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 600 !important;
+    content: "\f51e" !important;
+}
+#woo_order_pdf_frame {
+    width: 100%;
+    height: 1px;
+    visibility: hidden;
+}
+
+div#order_items_print_pdf {
+    height: 1px;
+    overflow: hidden;
+}
+
+div#order_items_metabox {
+    /* height: 1px;
+    overflow: hidden;
+    background: transparent; */
+    border: 0;
+}
+#woo_order_items_html table, #woo_order_pdf_frame table {
+    width: 100%;
+    padding-top: 50px;
+}
