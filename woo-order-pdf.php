@@ -2,7 +2,7 @@
 /*
 Plugin Name: Woo Order PDF
 Description: Adds a Generate PDF button to print orders in the WooCommerce admin.
-Version: 1.0.9
+Version: 1.1.0
 Author: Mak Alamin
 */
 
@@ -54,7 +54,6 @@ function woo_op_order_print_metabox_content($post)
 function woo_op_order_composite_meta($order_item_id, $order_item)
 {
     if (($ids = $order_item->get_meta('wooco_ids')) && (is_admin() || (WPCleverWooco::get_setting('hide_component', 'no') === 'yes_text') || (WPCleverWooco::get_setting('hide_component', 'no') === 'yes_list'))) {
-
         if ($items = WPCleverWooco::get_items($ids)) {
 
             $product_id = $order_item->get_product_id();
@@ -91,15 +90,15 @@ function woo_op_order_composite_meta($order_item_id, $order_item)
                 $items_str =  implode('<br/> ', $items_str);
             }
 
-            echo apply_filters('wooco_before_order_itemmeta_composite', '<div class="wooco-itemmeta-composite">' . sprintf(WPCleverWooco::localization('cart_components_s', esc_html__('Components: %s', 'wpc-composite-products')), $items_str) . '</div>', $order_item_id, $order_item);
+            return apply_filters('wooco_before_order_itemmeta_composite', '<div class="wooco-itemmeta-composite">' . sprintf(WPCleverWooco::localization('cart_components_s', esc_html__('Components: %s', 'wpc-composite-products')), $items_str) . '</div>', $order_item_id, $order_item);
         }
     }
 
     if (is_admin() && ($parent_id = $order_item->get_meta('wooco_parent_id'))) {
         if (($component = $order_item->get_meta('wooco_component')) && !empty($component)) {
-            echo apply_filters('wooco_before_order_itemmeta_component', '<div class="wooco-itemmeta-component">' . sprintf(WPCleverWooco::localization('cart_composite_s', esc_html__('Composite: %s', 'wpc-composite-products')), get_the_title($parent_id) . apply_filters('wooco_name_separator', ' &rarr; ') . $component) . '</div>', $order_item_id, $order_item);
+            return apply_filters('wooco_before_order_itemmeta_component', '<div class="wooco-itemmeta-component">' . sprintf(WPCleverWooco::localization('cart_composite_s', esc_html__('Composite: %s', 'wpc-composite-products')), get_the_title($parent_id) . apply_filters('wooco_name_separator', ' &rarr; ') . $component) . '</div>', $order_item_id, $order_item);
         } else {
-            echo apply_filters('wooco_before_order_itemmeta_component', '<div class="wooco-itemmeta-component">' . sprintf(WPCleverWooco::localization('cart_composite_s', esc_html__('Composite: %s', 'wpc-composite-products')), get_the_title($parent_id)) . '</div>', $order_item_id, $order_item);
+            return apply_filters('wooco_before_order_itemmeta_component', '<div class="wooco-itemmeta-component">' . sprintf(WPCleverWooco::localization('cart_composite_s', esc_html__('Composite: %s', 'wpc-composite-products')), get_the_title($parent_id)) . '</div>', $order_item_id, $order_item);
         }
     }
 }
