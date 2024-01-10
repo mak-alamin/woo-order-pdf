@@ -1,7 +1,12 @@
 <div id="woo_order_items_html">
     <?php
     require_once __DIR__ . '/order_pdf_style.php';
+
+    ob_start();
+
     require_once __DIR__ . '/order_pdf_html_header.php';
+
+    $pdf_page_header = ob_get_clean();
 
     $items_count = count($order->get_items());
 
@@ -11,15 +16,14 @@
     $counter = 1;
 
     // echo "Order Items: " . count($order->get_items());
-    
+
     $pdf_page_no = 1;
     $first_page_printed = '';
 
     foreach ($order->get_items() as $item_id => $item) {
         $item_html = '';
-        
-        $item_category = 'other-item';
 
+        $item_category = 'other-item';
 
         $meta_data = $item->get_all_formatted_meta_data('');
 
@@ -37,25 +41,28 @@
 
         $all_metadata = $item->get_meta_data();
 
-        // $item_html .=  "Counter: " . $counter;
         // $item_html .=  ", Pdf page: " . $pdf_page_no;
 
-        if ( ($counter == 7) || ($counter > 6 &&  ($counter / 6) > $pdf_page_no ) || ($first_page_printed = 'done' && $item_category == 'burger')) {
+        if ($counter == 1) {
+            $item_html .= '<div class="first_pdf_page">';
+            $item_html .= $pdf_page_header;
+        }
+
+        if (($counter == 7) || ($counter > 6 &&  ($counter / 6) > $pdf_page_no) || ($first_page_printed = 'done' && $item_category == 'burger')) {
 
             $first_page_printed = 'done';
-            
-            if($counter > 6 &&  ($counter / 6) > $pdf_page_no){
+
+            if ($counter > 6 &&  ($counter / 6) > $pdf_page_no) {
                 $pdf_page_no++;
+            }
+
+            if ($counter == 7) {
+                $item_html .= '</div>'; // .first_pdf_page ends
             }
 
             $item_html .=  '<div class="print-page-break"></div>';
 
-            ob_start();
-
-            include __DIR__ . '/order_pdf_html_header.php';
-
-            $item_html .= ob_get_clean();
-
+            $item_html .= $pdf_page_header;
         }
 
         // Item Name column

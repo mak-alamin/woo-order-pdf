@@ -1,4 +1,8 @@
 <h2 class="pdf_heading">Rechnung für Bestellung #<?php echo $order->get_id(); ?></h2>
+
+<div class="header_speisen">Speisen</div>
+<div class="header_burger">Burger</div>
+
 <div class="address">
     <p><?php echo $order->get_billing_address_2(); ?></p>
     <p><?php

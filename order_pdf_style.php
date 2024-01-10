@@ -1,4 +1,10 @@
 <style>
+
+.first_pdf_page h2{
+    color: #F61E61;
+}
+.first_pdf_page .header_speisen	{display:none}
+	
     /* style="visibility: hidden;" */
     #woo_order_items_html .pdf_heading,
     .pdf_heading {
