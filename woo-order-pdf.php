@@ -2,7 +2,7 @@
 /*
 Plugin Name: Woo Order PDF
 Description: Adds a Generate PDF button to print orders in the WooCommerce admin.
-Version: 1.1.1
+Version: 1.1.5
 Author: Mak Alamin
 */
 
@@ -117,7 +117,6 @@ function woo_op_generate_order_items_for_pdf($order_id)
 
     if (!empty($order)) {
         require_once __DIR__ . '/order_pdf_html.php';
-        echo '<iframe id="woo_order_pdf_frame"> </iframe>';
     } else {
         echo 'Order not found.';
     }

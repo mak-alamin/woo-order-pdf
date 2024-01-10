@@ -1,4 +1,4 @@
-function printDiv(divId, orderId = 0) {
+function wopPrintOrderFrame(divId, orderId = 0) {
   var originalTitle = document.title;
   
   document.title = "Rechnung für Bestellung#" + orderId;
@@ -19,7 +19,7 @@ function printDiv(divId, orderId = 0) {
 
   document.title = originalTitle;
 
-  document.getElementById("woo_order_pdf_frame").style.visibility = "hidden";
+  // document.getElementById("woo_order_pdf_frame").style.visibility = "hidden";
 }
 
 var wooOrderPrintBtn = document.getElementById("generate-pdf-button");
@@ -30,12 +30,14 @@ if (wooOrderPrintBtn) {
 
     var order_id = e.target.dataset.order_id;
 
-    printDiv("woo_order_items_html", order_id);
+    wopPrintOrderFrame("woo_order_items_html", order_id);
 
-    // printDiv("order_line_items");
+    // wopPrintOrderFrame("order_line_items");
   });
 }
 
+
+// Order table Action button
 jQuery(document).ready(function(){
   jQuery("a.button.wc-action-button.wc-action-button-print_pdf.print_pdf").append('<i class="fas fa-print"></i>');
 });
@@ -62,7 +64,7 @@ jQuery(document).on(
           jQuery("#order_items_print_pdf").html(res);
 
           setTimeout(function(){
-            printDiv("woo_order_items_html", order_id);
+            wopPrintOrderFrame("woo_order_items_html", order_id);
           }, 100);
         }
       },

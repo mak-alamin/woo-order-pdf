@@ -18,7 +18,6 @@
     // echo "Order Items: " . count($order->get_items());
 
     $pdf_page_no = 1;
-    $first_page_printed = '';
 
     foreach ($order->get_items() as $item_id => $item) {
         $item_html = '';
@@ -48,15 +47,14 @@
             $item_html .= $pdf_page_header;
         }
 
-        if (($counter == 7) || ($counter > 6 &&  ($counter / 6) > $pdf_page_no) || ($first_page_printed = 'done' && $item_category == 'burger')) {
-
-            $first_page_printed = 'done';
+        // Logic for page break
+        if (($counter == 7) || ($counter > 6 &&  ($counter / 6) > $pdf_page_no) || ($counter > 1 && $item_category == 'burger')) {
 
             if ($counter > 6 &&  ($counter / 6) > $pdf_page_no) {
                 $pdf_page_no++;
             }
 
-            if ($counter == 7) {
+            if ($counter == 7 || ($counter < 7 && $item_category == 'burger')) {
                 $item_html .= '</div>'; // .first_pdf_page ends
             }
 
@@ -148,3 +146,4 @@
     echo $burger_items;
     ?>
 </div>
+<iframe id="woo_order_pdf_frame"> </iframe>

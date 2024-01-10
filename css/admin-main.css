@@ -11,18 +11,20 @@ a.button.wc-action-button.wc-action-button-print_pdf.print_pdf .fa-print:before 
 #woo_order_pdf_frame {
     width: 100%;
     height: 1px;
-    visibility: hidden;
+    visibility: hidden !important;
 }
-
+iframe#woo_order_pdf_frame {
+    border: 0;
+}
 div#order_items_print_pdf {
     height: 1px;
     overflow: hidden;
 }
 
 div#order_items_metabox {
-    /* height: 1px;
+    height: 1px;
     overflow: hidden;
-    background: transparent; */
+    background: transparent;
     border: 0;
 }
 #woo_order_items_html table, #woo_order_pdf_frame table {

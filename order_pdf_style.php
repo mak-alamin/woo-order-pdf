@@ -1,10 +1,12 @@
 <style>
+    .first_pdf_page h2 {
+        color: #F61E61;
+    }
 
-.first_pdf_page h2{
-    color: #F61E61;
-}
-.first_pdf_page .header_speisen	{display:none}
-	
+    .first_pdf_page .header_speisen {
+        display: none
+    }
+
     /* style="visibility: hidden;" */
     #woo_order_items_html .pdf_heading,
     .pdf_heading {
@@ -24,12 +26,15 @@
     .order-item.other-item {
         padding-top: 20px;
     }
+
     #woo_order_items_html .order-item table,
-    .order-item table, .items-table {
-        padding-top:0px;
+    .order-item table,
+    .items-table {
+        padding-top: 0px;
     }
-    .header-table{
-        padding-top:30px;
+
+    .header-table {
+        padding-top: 30px;
     }
 
     #woo_order_items_html .item-heading th,
@@ -45,7 +50,9 @@
 
     #woo_order_items_html table th,
     #woo_order_items_html .order-item th,
-    .order-item th, .items-table th, .header-table th {
+    .order-item th,
+    .items-table th,
+    .header-table th {
         text-align: left;
     }
 
@@ -66,6 +73,16 @@
     #woo_order_items_html .display_meta td,
     .display_meta td {
         color: #888897;
+    }
+
+    #woo_order_pdf_frame {
+        width: 100%;
+        height: 1px;
+        visibility: hidden !important;
+    }
+
+    iframe#woo_order_pdf_frame {
+        border: 0 !important;
     }
 
     @media print {
